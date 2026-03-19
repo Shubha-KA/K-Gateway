@@ -32,7 +32,7 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "100m"
-              
+
 ---
 apiVersion: v1
 kind: Service
@@ -46,4 +46,4 @@ spec:
     - port: 3004
       targetPort: 3000
       protocol: TCP
-  type: CLusterIP
+  type: ClusterIP
