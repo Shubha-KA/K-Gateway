@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitness-deployment
+  namespace: shubha-ns
+  labels:
+    app: fitness-app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: fitness
+  template:
+    metadata:
+      labels:
+        app: fitness
+    spec:
+      containers:
+        - name: fitness-app-container
+          image: muralisocial123/fitness-app:v1.0.1
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fitness-service
+  namespace: shubha-ns
+spec:
+  selector:
+    app: fitness
+  ports:
+    - port: 3001 #It is a service port no., we are using to expose aplication to the internet
+      targetPort: 5000
+      protocol: TCP
+  type: ClusterIP

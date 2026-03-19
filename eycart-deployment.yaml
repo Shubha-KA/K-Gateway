@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eycart-deployment
+  namespace: shubha-ns
+  labels:
+    app: eycart-app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: eycart
+  template:
+    metadata:
+      labels:
+        app: eycart
+    spec:
+      containers:
+        - name: eycart-container
+          image: muralisocial123/ey-cart:v1.1.0
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eycart-service
+  namespace: shubha-ns
+spec:
+  selector:
+    app: eycart
+  ports:
+    - port: 3004
+      targetPort: 3000
+      protocol: TCP
+  type: CLusterIP
